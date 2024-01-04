@@ -4,9 +4,15 @@ import math
 import os
 import time
 import json
+import logging
+logging.basicConfig(filename="/log.txt",
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
 parser=argparse.ArgumentParser()
 parser.add_argument("-n",default=3000000,type=int,required=False)
-parser.add_argument("-b",default=1000,type=int,required=False)
+parser.add_argument("-b",default=3000,type=int,required=False)
 parser.add_argument("-d",type=str,required=True)
 args=vars(parser.parse_args())
 n=args["n"]
@@ -35,7 +41,6 @@ while True:
     wait_time+=1
     if wait_time==wait_thres:
         wait_thres/=2
-        break
     try:
         if os.path.isfile(os.path.join(db_dir,"safe.lock")):
             break 
@@ -49,9 +54,9 @@ while True:
         i=random.randint(0,page_size-1)
     else:
         i=random.randint(0,n-num_page*(page_size-1))
-    print(f"Reading ({p},{i})")
+    logging.info(f"Reading ({p},{i})")
     with open(os.path.join(db_dir,"db",str(p)),"r") as f:
         for j in range(i):
             next(f)
-        print(f"Read {json.loads(f.readline())[1:5]}...")
+    logging.info(f"Done ({p},{i})")
     time.sleep(random.randint(0,5))
