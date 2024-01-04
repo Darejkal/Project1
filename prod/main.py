@@ -2,10 +2,9 @@ import random
 import argparse
 import math
 import os
-import json
 import multiprocessing
-import time
 import logging 
+from typing import List
 logging.basicConfig(filename="/log.txt",
                     filemode='a',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
@@ -59,8 +58,11 @@ class DBSampler:
             f=open(_p,"a")
             for _ in range(last,pageSize):
                 leg=random.randint(100,10000)
-                arr=random.choices(pop,k=leg)
-                f.write(json.dumps(arr)+"\n")
+                for _ in range(leg):
+                    f.write(str(random.choice(pop)))
+                    f.write(" ")
+                f.write("\n")
+                f.flush()
             f.close()
             logging.info(f"done {i}")
 sampler=DBSampler(args["w"],os.path.join(db_dir,"db"),num_page,page_size)

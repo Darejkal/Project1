@@ -3,7 +3,7 @@ services:
     image: python
     volumes:
     - ./con/main.py:/main.py
-    - db:${db_dir}:ro
+    - ./db:${db_dir}:ro
     - ./con/log.txt:/log.txt
     entrypoint: python -u /main.py -d ${db_dir} -n ${n} -b ${b}
     restart: always
@@ -15,7 +15,7 @@ services:
     image: python
     volumes:
     - ./prod/main.py:/main.py
-    - db:${db_dir}
+    - ./db:${db_dir}
     - ./prod/log.txt:/log.txt
     entrypoint: python -u /main.py -d ${db_dir} -n ${n} -b ${b} -w ${w}
     restart: on-failure
@@ -23,27 +23,25 @@ services:
       resources:
         limits:
           memory: 400M
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-    - 9090:9090
-    command:
-    - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-    - ./prom/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    depends_on:
-    - cadvisor
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    ports:
-    - 8080:8080
-    volumes:
-    - /:/rootfs:ro
-    - /var/run:/var/run:rw
-    - /sys:/sys:ro
-    - /var/lib/docker/:/var/lib/docker:ro
-    - /dev:/dev:ro 
-volumes:
-  db:
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   ports:
+  #   - 9090:9090
+  #   command:
+  #   - --config.file=/etc/prometheus/prometheus.yml
+  #   volumes:
+  #   - ./prom/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   depends_on:
+  #   - cadvisor
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:latest
+  #   container_name: cadvisor
+  #   ports:
+  #   - 8080:8080
+  #   volumes:
+  #   - /:/rootfs:ro
+  #   - /var/run:/var/run:rw
+  #   - /sys:/sys:ro
+  #   - /var/lib/docker/:/var/lib/docker:ro
+  #   - /dev:/dev:ro 

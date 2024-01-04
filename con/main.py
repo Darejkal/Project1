@@ -3,7 +3,6 @@ import argparse
 import math
 import os
 import time
-import json
 import logging
 logging.basicConfig(filename="/log.txt",
                     filemode='a',
@@ -58,5 +57,6 @@ while True:
     with open(os.path.join(db_dir,"db",str(p)),"r") as f:
         for j in range(i):
             next(f)
+        print(next(f," ")[:-1].split(" "))
     logging.info(f"Done ({p},{i})")
     time.sleep(random.randint(0,5))
